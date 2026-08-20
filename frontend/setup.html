@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="setup">
+<div class="setup-wizard">
+  <h1>Welcome! Let's set things up</h1>
+  <div class="subtitle">A few quick steps, then the dashboard is ready to use. You can always add more later.</div>
+
+  <div class="setup-steps">
+    <div class="setup-step-dot" data-step="1"></div>
+    <div class="setup-step-dot" data-step="2"></div>
+    <div class="setup-step-dot" data-step="3"></div>
+    <div class="setup-step-dot" data-step="4"></div>
+  </div>
+
+  <!-- Step 1: Medicines -->
+  <div class="card setup-step" id="step-1">
+    <h2 class="mt-0">Step 1 of 4 &middot; Add Medicines</h2>
+    <p class="text-muted">Enter what's currently on hand. This becomes the starting stock the system tracks.</p>
+
+    <form id="medicine-form">
+      <label for="m-name">Medicine Name</label>
+      <input type="text" id="m-name" required placeholder="e.g. Tablet A">
+      <div class="grid grid-2">
+        <div>
+          <label for="m-stock">Current Stock Quantity</label>
+          <input type="number" id="m-stock" min="0" step="any" required>
+        </div>
+        <div>
+          <label for="m-threshold">Low Stock Threshold</label>
+          <input type="number" id="m-threshold" min="0" step="any" value="5">
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" style="margin-top:14px;">+ Add Medicine</button>
+    </form>
+
+    <div id="medicine-list" style="margin-top:16px;"></div>
+    <div class="btn-row" style="margin-top:24px;">
+      <button type="button" id="step1-next" class="btn-primary btn-large" disabled>Next: Schedule</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Schedule -->
+  <div class="card setup-step" id="step-2" style="display:none;">
+    <h2 class="mt-0">Step 2 of 4 &middot; Set Medication Times</h2>
+    <p class="text-muted">Add one or more times per day for each medicine. You can skip this and add it later from the Schedule page.</p>
+
+    <form id="schedule-form">
+      <label for="s-medicine">Medicine</label>
+      <select id="s-medicine" required></select>
+      <div class="grid grid-2">
+        <div>
+          <label for="s-time">Time</label>
+          <input type="time" id="s-time" required>
+        </div>
+        <div>
+          <label for="s-dosage">Dosage</label>
+          <input type="number" id="s-dosage" min="0.01" step="any" value="1" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" style="margin-top:14px;">+ Add Schedule</button>
+    </form>
+
+    <div id="schedule-list" style="margin-top:16px;"></div>
+    <div class="btn-row" style="margin-top:24px;">
+      <button type="button" id="step2-back">Back</button>
+      <button type="button" id="step2-next" class="btn-primary btn-large">Next: Camera</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Cameras -->
+  <div class="card setup-step" id="step-3" style="display:none;">
+    <h2 class="mt-0">Step 3 of 4 &middot; Add Cameras</h2>
+    <p class="text-muted">Software-simulated for this prototype. Optional - skip if not needed right now.</p>
+
+    <form id="camera-form">
+      <div class="grid grid-2">
+        <div>
+          <label for="c-name">Camera Name</label>
+          <input type="text" id="c-name" required placeholder="e.g. Bedroom Camera">
+        </div>
+        <div>
+          <label for="c-location">Location</label>
+          <input type="text" id="c-location" placeholder="e.g. Bedroom">
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" style="margin-top:14px;">+ Add Camera</button>
+    </form>
+
+    <div id="camera-list" style="margin-top:16px;"></div>
+    <div class="btn-row" style="margin-top:24px;">
+      <button type="button" id="step3-back">Back</button>
+      <button type="button" id="step3-next" class="btn-primary btn-large">Next: Smart Home</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Smart devices -->
+  <div class="card setup-step" id="step-4" style="display:none;">
+    <h2 class="mt-0">Step 4 of 4 &middot; Add Smart Home / IoT Devices</h2>
+    <p class="text-muted">Software-simulated for this prototype, hardware-ready for later. Optional - skip if not needed right now.</p>
+
+    <form id="device-form">
+      <div class="grid grid-2">
+        <div>
+          <label for="d-name">Device Name</label>
+          <input type="text" id="d-name" required placeholder="e.g. Bedroom Light">
+        </div>
+        <div>
+          <label for="d-type">Device Type</label>
+          <select id="d-type">
+            <option value="light">Light</option>
+            <option value="fan">Fan</option>
+            <option value="ac">AC</option>
+            <option value="tv">TV</option>
+            <option value="plug">Smart Plug</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <label for="d-location">Location</label>
+      <input type="text" id="d-location" placeholder="e.g. Living Room">
+      <button type="submit" class="btn-primary" style="margin-top:14px;">+ Add Device</button>
+    </form>
+
+    <div id="device-list" style="margin-top:16px;"></div>
+    <div class="btn-row" style="margin-top:24px;">
+      <button type="button" id="step4-back">Back</button>
+      <button type="button" id="finish-setup" class="btn-success btn-large">Finish Setup &amp; Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/setup.js"></script>
+</body>
+</html>

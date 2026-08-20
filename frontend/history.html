@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="history">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Medication History</h1>
+        <div class="subtitle">Every dose ever scheduled, and what happened to it</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="grid grid-3">
+        <div>
+          <label for="filter-date">Date</label>
+          <input type="date" id="filter-date">
+        </div>
+        <div>
+          <label for="filter-medicine">Medicine</label>
+          <select id="filter-medicine"><option value="">All medicines</option></select>
+        </div>
+        <div>
+          <label for="filter-status">Status</label>
+          <select id="filter-status">
+            <option value="">All statuses</option>
+            <option value="TAKEN">Taken</option>
+            <option value="MISSED">Missed</option>
+            <option value="PENDING">Pending</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:16px;">
+        <button class="btn-primary" id="apply-filters-btn">Apply Filters</button>
+        <button id="clear-filters-btn">Clear</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Medicine</th><th>Scheduled Time</th><th>Dosage</th><th>Status</th><th>Confirmation Time</th><th>Stock After</th></tr>
+          </thead>
+          <tbody id="history-table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="history-empty" style="display:none;">No records match these filters.</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/history.js"></script>
+</body>
+</html>

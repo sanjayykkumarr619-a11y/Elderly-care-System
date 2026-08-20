@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="schedule">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Medication Schedule</h1>
+        <div class="subtitle">Set what time each medicine should be taken</div>
+      </div>
+      <button class="btn-primary btn-large role-medication-write" id="add-schedule-btn">+ Add Schedule</button>
+    </div>
+
+    <div class="card role-medication-write" id="schedule-form-card" style="display:none;">
+      <h3 class="mt-0" id="form-title">Add Schedule</h3>
+      <form id="schedule-form">
+        <label for="sch-medicine">Medicine</label>
+        <select id="sch-medicine" required></select>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="sch-time">Time</label>
+            <input type="time" id="sch-time" required>
+          </div>
+          <div>
+            <label for="sch-dosage">Dosage</label>
+            <input type="number" id="sch-dosage" min="0.01" step="any" required value="1">
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="sch-active" checked>
+          <label for="sch-active" style="margin:0;">Active</label>
+        </div>
+
+        <div class="btn-row" style="margin-top:20px;">
+          <button type="submit" class="btn-primary">Save Schedule</button>
+          <button type="button" id="cancel-form-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Time</th><th>Medicine</th><th>Dosage</th><th>Active</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="schedule-table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="schedule-empty" style="display:none;">No schedules yet.</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/schedule.js"></script>
+</body>
+</html>

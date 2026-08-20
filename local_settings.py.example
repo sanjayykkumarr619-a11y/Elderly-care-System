@@ -1,0 +1,23 @@
+# Copy this file to local_settings.py (same folder as server.py) and put
+# your real credentials in it. local_settings.py is git-ignored and read
+# automatically by config.py - never paste real keys/passwords into chat,
+# commits, or anywhere else that might be shared.
+
+# Fast2SMS (legacy - the app now sends caregiver alerts by email instead,
+# but this is kept in case SMS is ever re-enabled).
+FAST2SMS_API_KEY = "your-fast2sms-api-key-here"
+
+# SMTP (email_service.py) - the mailbox caregiver alert emails are sent
+# FROM. SMTP_USERNAME/SMTP_PASSWORD authenticate to the mail server;
+# SENDER_EMAIL is the "From" address shown to recipients (usually the
+# same as SMTP_USERNAME).
+#
+# For Gmail: create (or use) a dedicated Gmail account, turn on 2-Step
+# Verification (https://myaccount.google.com/security), then generate an
+# App Password (https://myaccount.google.com/apppasswords) - that 16
+# character password is SMTP_PASSWORD, NOT your normal Gmail password.
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_USERNAME = "your-app-gmail-address@gmail.com"
+SMTP_PASSWORD = "xxxx xxxx xxxx xxxx"
+SENDER_EMAIL = "your-app-gmail-address@gmail.com"

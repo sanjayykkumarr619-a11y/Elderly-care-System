@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="notifications">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Notification Center</h1>
+        <div class="subtitle">Medication events, stock alerts, and system events for patient &amp; caregiver</div>
+      </div>
+      <button id="refresh-btn">Refresh</button>
+    </div>
+
+    <div class="card">
+      <div id="notification-list"></div>
+      <div class="empty-state" id="notification-empty" style="display:none;">No notifications yet.</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>

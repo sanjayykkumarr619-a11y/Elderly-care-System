@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="settings">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Settings</h1>
+        <div class="subtitle">Account, caregiver contact, and notification permissions</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="mt-0">Account</h3>
+      <p>Logged in as <strong id="account-username">-</strong> <span class="role-badge" id="account-role-badge"></span></p>
+      <p class="text-muted" id="linked-patient-note" style="display:none;"></p>
+    </div>
+
+    <div class="card role-patient-only">
+      <h3 class="mt-0">Caregiver / Family Recipients</h3>
+      <p class="text-muted">Taken/missed/low-stock/refill events are emailed to every recipient marked Active below. Add as many as you need.</p>
+
+      <div id="caregiver-list"></div>
+
+      <h4 style="margin-top:20px;">Add Recipient</h4>
+      <form id="add-caregiver-form">
+        <div class="grid grid-2">
+          <div>
+            <label for="new-caregiver-name">Name</label>
+            <input type="text" id="new-caregiver-name" required placeholder="e.g. Priya (Daughter)">
+          </div>
+          <div>
+            <label for="new-caregiver-email">Email Address</label>
+            <input type="email" id="new-caregiver-email" required placeholder="e.g. priya@example.com">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top:16px;">+ Add Recipient</button>
+      </form>
+    </div>
+
+    <div class="card role-patient-only">
+      <h3 class="mt-0">Invite Code</h3>
+      <p class="text-muted">Share this code with a Caretaker, Family Member, or Doctor so they can create an account linked to your data. Regenerating it invalidates the old code (existing linked accounts stay linked).</p>
+      <p style="font-size:24px;font-weight:700;letter-spacing:0.1em;" id="invite-code-display">-</p>
+      <button class="btn-sm" id="regenerate-invite-btn">Regenerate Code</button>
+
+      <h3 style="margin-top:28px;">Linked Accounts</h3>
+      <div id="linked-accounts-list"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="mt-0">Browser Notifications</h3>
+      <p class="text-muted">Grant permission so medication reminders can show a native browser notification in addition to the in-app alert and sound.</p>
+      <p>Current permission: <strong id="perm-status">-</strong></p>
+      <button class="btn-primary" id="request-perm-btn">Request Notification Permission</button>
+    </div>
+
+    <div class="card">
+      <h3 class="mt-0">Medication Rules</h3>
+      <ul>
+        <li>A dose becomes <strong>MISSED</strong> if not confirmed within <strong>30 minutes</strong> of its scheduled time.</li>
+        <li><strong>TAKEN</strong> doses reduce stock by the dosage amount. <strong>MISSED</strong> doses never change stock.</li>
+        <li>Once a dose is TAKEN or MISSED, it cannot be changed again - this prevents duplicate stock deductions.</li>
+        <li>Confirming a dose is blocked if there isn't enough stock to cover it.</li>
+        <li>Taken/missed/low-stock/refill events are emailed to every active recipient above.</li>
+        <li>A low-stock alert (and email) fires once per dip below the threshold - refilling above the threshold resets it, so the next dip alerts again.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 class="mt-0">About This Prototype</h3>
+      <p>This is a software-only prototype. Camera Monitoring and Smart Home Control use simulated virtual devices today. The backend includes a device abstraction layer (<code>devices/device_manager.py</code>) and hardware-ready APIs (robot, sensors, cameras, smart devices) so a Raspberry Pi with real sensors, relays, motors, and cameras can be connected later without changing this frontend.</p>
+      <p class="text-muted">Data is stored locally in SQLite at <code>database/elderly_care.db</code>, scoped per account, and survives server restarts and browser refreshes.</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Home - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="smart-home">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Smart Home Control</h1>
+        <div class="subtitle">Software-only virtual devices - hardware-ready for Raspberry Pi relays later</div>
+      </div>
+      <button class="btn-primary btn-large role-camera-control" id="add-device-btn">+ Add Device</button>
+    </div>
+
+    <div class="section-note">Every ON/OFF command below goes through the same Device Manager / Device Abstraction Layer a real Raspberry Pi relay would use. Today it drives a VirtualDevice; later it can drive real hardware without any frontend changes.</div>
+
+    <div class="card role-camera-control" id="device-form-card" style="display:none;">
+      <h3 class="mt-0">Add Device</h3>
+      <form id="device-form">
+        <div class="grid grid-2">
+          <div>
+            <label for="d-name">Device Name</label>
+            <input type="text" id="d-name" required placeholder="e.g. Kitchen Light">
+          </div>
+          <div>
+            <label for="d-type">Device Type</label>
+            <select id="d-type">
+              <option value="light">Light</option>
+              <option value="fan">Fan</option>
+              <option value="ac">AC</option>
+              <option value="tv">TV</option>
+              <option value="plug">Smart Plug</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <label for="d-location">Location</label>
+        <input type="text" id="d-location" placeholder="e.g. Kitchen">
+        <div class="btn-row" style="margin-top:20px;">
+          <button type="submit" class="btn-primary">Save Device</button>
+          <button type="button" id="cancel-device-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="smart-home-content">
+      <h2>Devices</h2>
+      <div class="grid grid-3" id="device-grid"></div>
+
+      <h2 style="margin-top:32px;">Sensors <span class="text-muted" style="font-size:14px;font-weight:400;">(hardware-ready, read-only preview)</span></h2>
+      <div class="grid grid-3" id="sensor-grid"></div>
+
+      <h2 style="margin-top:32px;">Dispensing Robot <span class="text-muted" style="font-size:14px;font-weight:400;">(hardware-ready, simulated)</span></h2>
+      <div class="card">
+        <p>Status: <span id="robot-status" class="badge badge-off">-</span></p>
+        <p class="text-muted" id="robot-event"></p>
+        <div class="btn-row role-camera-control">
+          <button class="btn-primary" onclick="dispense()">Simulate Dispense</button>
+          <button class="btn-danger" onclick="alarm()">Trigger Alarm</button>
+          <button onclick="stopRobot()">Stop</button>
+        </div>
+      </div>
+    </div>
+    <div class="card no-access-card" id="smart-home-no-access" style="display:none;">
+      Smart home control is only available to Patient and Family Member accounts.
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/smart-home.js"></script>
+</body>
+</html>

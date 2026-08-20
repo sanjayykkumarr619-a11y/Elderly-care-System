@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="dashboard">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="subtitle" id="today-date"></div>
+      </div>
+      <button class="btn-primary btn-large role-medication-write" onclick="location.href='medication.html'">+ Add Medicine</button>
+    </div>
+
+    <div class="card role-patient-only" id="alarm-control-card">
+      <h3 class="mt-0">Medication Alarm</h3>
+      <p class="text-muted">Click once so this browser allows the automatic alarm sound to play the moment a dose is due. This is a one-time setup per browser.</p>
+      <p>Status: <strong id="alarm-status-text">Not enabled</strong></p>
+      <div class="btn-row">
+        <button class="btn-primary btn-large" id="enable-alarm-btn">🔔 Enable Medication Alarm</button>
+      </div>
+    </div>
+
+    <div class="grid grid-4" id="stat-tiles"></div>
+
+    <div class="card">
+      <h2 class="mt-0">Today's Medication</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Time</th><th>Medicine</th><th>Dosage</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody id="today-table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="today-empty" style="display:none;">No medications scheduled for today yet. Add a schedule to get started.</div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 class="mt-0">Low Stock Alerts</h3>
+        <div id="low-stock-list"></div>
+      </div>
+      <div class="card">
+        <h3 class="mt-0">Recent Notifications</h3>
+        <div id="recent-notifications"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

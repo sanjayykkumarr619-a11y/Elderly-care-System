@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="stock">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Stock Monitoring</h1>
+        <div class="subtitle">Virtual stock tracked by the system - refill it here after buying more physically</div>
+      </div>
+    </div>
+
+    <div class="section-note">Stock only changes when a dose is confirmed "Taken", or when you add a refill here. Missed doses never reduce stock.</div>
+
+    <div class="card role-patient-only" id="add-stock-card" style="display:none;">
+      <h3 class="mt-0" id="add-stock-title">Add Stock</h3>
+      <form id="add-stock-form">
+        <input type="hidden" id="stock-medicine-id">
+        <label for="stock-amount">Refill Quantity</label>
+        <input type="number" id="stock-amount" min="0.01" step="any" required>
+        <div class="btn-row" style="margin-top:20px;">
+          <button type="submit" class="btn-primary">Add Stock</button>
+          <button type="button" id="cancel-stock-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Medicine</th><th>Current Stock</th><th>Low Stock Threshold</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="stock-table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="stock-empty" style="display:none;">No medicines yet.</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/stock.js"></script>
+</body>
+</html>

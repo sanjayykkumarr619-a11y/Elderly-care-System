@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cameras - Elderly Care System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="cameras">
+<div class="app-shell">
+  <div id="sidebar-placeholder"></div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Camera Monitoring</h1>
+        <div class="subtitle">Software-only simulated feeds - hardware-ready for real cameras later</div>
+      </div>
+      <button class="btn-primary btn-large role-camera-control" id="add-camera-btn">+ Add Camera</button>
+    </div>
+
+    <div class="section-note">This prototype simulates camera connections in software. The same API (connect / disconnect / stream) is what a real Raspberry Pi camera would use, so the frontend will not need to change later.</div>
+
+    <div class="card role-camera-control" id="camera-form-card" style="display:none;">
+      <h3 class="mt-0">Add Camera</h3>
+      <form id="camera-form">
+        <label for="cam-name">Camera Name</label>
+        <input type="text" id="cam-name" required placeholder="e.g. Bedroom Camera">
+        <label for="cam-location">Location</label>
+        <input type="text" id="cam-location" placeholder="e.g. Bedroom">
+        <div class="btn-row" style="margin-top:20px;">
+          <button type="submit" class="btn-primary">Save Camera</button>
+          <button type="button" id="cancel-camera-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="camera-content">
+      <div class="grid grid-2" id="camera-grid"></div>
+      <div class="empty-state" id="camera-empty" style="display:none;">No cameras yet. Click "Add Camera" to create one.</div>
+    </div>
+    <div class="card no-access-card" id="camera-no-access" style="display:none;">
+      Camera monitoring is only available to Patient and Family Member accounts.
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/cameras.js"></script>
+</body>
+</html>

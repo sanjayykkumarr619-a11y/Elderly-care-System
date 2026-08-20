@@ -16,7 +16,7 @@ async function init() {
     const select = document.getElementById("filter-medicine");
     select.innerHTML =
       `<option value="">All medicines</option>` +
-      medData.medicines.map((m) => `<option value="${m.id}">${m.name}</option>`).join("");
+      medData.medicines.map((m) => `<option value="${m.id}">${CareCommon.escapeHtml(m.name)}</option>`).join("");
   } catch (err) {
     CareCommon.errorToast(err);
   }
@@ -52,13 +52,13 @@ function renderHistory(records) {
   body.innerHTML = records
     .map(
       (r) => `<tr>
-        <td>${CareCommon.formatDateDisplay(r.scheduled_date)}</td>
-        <td>${r.medicine_name}</td>
-        <td>${CareCommon.formatTime12(r.scheduled_time)}</td>
-        <td>${CareCommon.formatNumber(r.dosage)}</td>
-        <td>${CareCommon.statusBadge(r.status)}</td>
-        <td>${r.confirmed_at ? CareCommon.formatDateTimeDisplay(r.confirmed_at) : "-"}</td>
-        <td>${r.stock_after !== null && r.stock_after !== undefined ? CareCommon.formatNumber(r.stock_after) : "-"}</td>
+        <td data-label="Date">${CareCommon.formatDateDisplay(r.scheduled_date)}</td>
+        <td data-label="Medicine"><strong style="color:var(--color-primary-dark);">${CareCommon.escapeHtml(r.medicine_name)}</strong></td>
+        <td data-label="Scheduled Time">${CareCommon.formatTime12(r.scheduled_time)}</td>
+        <td data-label="Dosage">${CareCommon.formatNumber(r.dosage)}</td>
+        <td data-label="Status">${CareCommon.statusBadge(r.status)}</td>
+        <td data-label="Confirmed At">${r.confirmed_at ? CareCommon.formatDateTimeDisplay(r.confirmed_at) : "-"}</td>
+        <td data-label="Stock After">${r.stock_after !== null && r.stock_after !== undefined ? CareCommon.formatNumber(r.stock_after) : "-"}</td>
       </tr>`
     )
     .join("");

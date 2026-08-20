@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initAlarmControls() {
   const statusEl = document.getElementById("alarm-status-text");
   const enableBtn = document.getElementById("enable-alarm-btn");
-  if (!statusEl || !enableBtn) return; // hidden for non-Patient roles
+  if (!statusEl || !enableBtn) return;
 
   function refreshStatus() {
     const enabled = AlarmAudio.isEnabled();
@@ -77,7 +77,7 @@ function renderStats(records, stock) {
     .map(
       (t) => `<div class="stat-tile ${t.cls}">
         <div class="stat-label">${t.label}</div>
-        <div class="stat-value" style="${t.label === "Next Medication" ? "font-size:20px;" : ""}">${t.value}</div>
+        <div class="stat-value" style="${t.label === "Next Medication" ? "font-size:18px;" : ""}">${t.value}</div>
       </div>`
     )
     .join("");
@@ -96,12 +96,12 @@ function renderTodayTable(records) {
   body.innerHTML = sorted
     .map(
       (r) => `<tr>
-        <td>${CareCommon.formatTime12(r.scheduled_time)}</td>
-        <td>${r.medicine_name}</td>
-        <td>${CareCommon.formatNumber(r.dosage)}</td>
-        <td>${CareCommon.statusBadge(r.status)}</td>
-        <td>${r.status === "PENDING"
-          ? `<button class="btn-success btn-sm role-patient-only" onclick="confirmTaken(${r.id})">Mark Taken</button>`
+        <td data-label="Time"><strong style="font-size:15px;color:var(--color-primary);">${CareCommon.formatTime12(r.scheduled_time)}</strong></td>
+        <td data-label="Medicine"><strong style="color:var(--color-text);">${CareCommon.escapeHtml(r.medicine_name)}</strong></td>
+        <td data-label="Dosage">${CareCommon.formatNumber(r.dosage)} dose</td>
+        <td data-label="Status">${CareCommon.statusBadge(r.status)}</td>
+        <td data-label="Action">${r.status === "PENDING"
+          ? `<button class="btn-success btn-sm role-patient-only" onclick="confirmTaken(${r.id})">✓ Mark Taken</button>`
           : `<span class="text-muted">-</span>`}
         </td>
       </tr>`
@@ -130,8 +130,8 @@ function renderLowStock(stock) {
     .map(
       (m) => `<div class="notification-item">
         <div>
-          <div class="n-title">${m.name}</div>
-          <div class="n-meta">${CareCommon.formatNumber(m.current_stock)} left - threshold ${CareCommon.formatNumber(m.low_stock_threshold)}</div>
+          <div class="n-title">${CareCommon.escapeHtml(m.name)}</div>
+          <div class="n-meta"><strong style="color:var(--color-danger);">${CareCommon.formatNumber(m.current_stock)}</strong> left &middot; threshold ${CareCommon.formatNumber(m.low_stock_threshold)}</div>
         </div>
       </div>`
     )
@@ -149,8 +149,8 @@ function renderRecentNotifications(notifications) {
     .map(
       (n) => `<div class="notification-item ${n.is_read ? "" : "unread"}">
         <div>
-          <div class="n-title">${n.title}</div>
-          <div class="n-meta">${n.message}</div>
+          <div class="n-title">${CareCommon.escapeHtml(n.title)}</div>
+          <div class="n-meta">${CareCommon.escapeHtml(n.message)}</div>
           <div class="n-meta">${CareCommon.formatDateTimeDisplay(n.created_at)}</div>
         </div>
       </div>`

@@ -30,16 +30,16 @@ function renderMedicines(medicines) {
   body.innerHTML = medicines
     .map(
       (m) => `<tr>
-        <td>${m.name}</td>
-        <td>${CareCommon.formatNumber(m.initial_stock)}</td>
-        <td>${CareCommon.formatNumber(m.current_stock)}</td>
-        <td>${CareCommon.formatNumber(m.low_stock_threshold)}</td>
-        <td>${CareCommon.statusBadge(m.stock_status)}</td>
-        <td>
+        <td data-label="Name"><strong style="font-size:16px;color:var(--color-primary-dark);">${CareCommon.escapeHtml(m.name)}</strong></td>
+        <td data-label="Initial Stock">${CareCommon.formatNumber(m.initial_stock)}</td>
+        <td data-label="Current Stock"><strong style="${m.stock_status === 'LOW_STOCK' ? 'color:var(--color-danger);font-size:17px;' : 'font-size:17px;'}">${CareCommon.formatNumber(m.current_stock)}</strong></td>
+        <td data-label="Threshold">${CareCommon.formatNumber(m.low_stock_threshold)}</td>
+        <td data-label="Status">${CareCommon.statusBadge(m.stock_status)}</td>
+        <td data-label="Actions">
           <div class="btn-row role-medication-write">
             <button class="btn-sm" onclick='openForm(${JSON.stringify(m)})'>Edit</button>
-            <button class="btn-sm" onclick="location.href='stock.html'">Adjust Stock</button>
-            <button class="btn-sm btn-danger" onclick="deleteMedicine(${m.id}, '${m.name.replace(/'/g, "\\'")}')">Delete</button>
+            <button class="btn-sm btn-primary" onclick="location.href='stock.html'">Refill</button>
+            <button class="btn-sm btn-danger" onclick="deleteMedicine(${m.id}, '${CareCommon.escapeHtml(m.name).replace(/'/g, "\\'")}')">Delete</button>
           </div>
         </td>
       </tr>`

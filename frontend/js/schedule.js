@@ -18,7 +18,7 @@ async function init() {
       select.innerHTML = `<option value="">No medicines yet - add one first</option>`;
     } else {
       select.innerHTML = medicinesCache
-        .map((m) => `<option value="${m.id}">${m.name}</option>`)
+        .map((m) => `<option value="${m.id}">${CareCommon.escapeHtml(m.name)}</option>`)
         .join("");
     }
     loadSchedules();
@@ -49,11 +49,11 @@ function renderSchedules(schedules) {
   body.innerHTML = sorted
     .map(
       (s) => `<tr>
-        <td>${CareCommon.formatTime12(s.scheduled_time)}</td>
-        <td>${s.medicine_name}</td>
-        <td>${CareCommon.formatNumber(s.dosage)}</td>
-        <td>${s.active ? '<span class="badge badge-on">ACTIVE</span>' : '<span class="badge badge-off">DISABLED</span>'}</td>
-        <td>
+        <td data-label="Time"><strong style="font-size:15px;color:var(--color-primary);">${CareCommon.formatTime12(s.scheduled_time)}</strong></td>
+        <td data-label="Medicine"><strong style="color:var(--color-text);">${CareCommon.escapeHtml(s.medicine_name)}</strong></td>
+        <td data-label="Dosage">${CareCommon.formatNumber(s.dosage)} dose</td>
+        <td data-label="Status">${s.active ? '<span class="badge badge-on">ACTIVE</span>' : '<span class="badge badge-off">DISABLED</span>'}</td>
+        <td data-label="Actions">
           <div class="btn-row role-medication-write">
             <button class="btn-sm" onclick="toggleActive(${s.id}, ${!s.active})">${s.active ? "Disable" : "Enable"}</button>
             <button class="btn-sm btn-danger" onclick="deleteSchedule(${s.id})">Delete</button>

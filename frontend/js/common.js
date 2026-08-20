@@ -1,47 +1,161 @@
-/* Shared UI plumbing used by every page: sidebar nav, toasts, formatting
-   helpers, and the browser-side medication reminder engine. */
+/* Shared UI plumbing used by every page: sidebar nav, mobile header,
+   mobile bottom bar, mobile drawer, toasts, formatting helpers,
+   and the browser-side medication reminder engine. */
 
 const CareCommon = (() => {
   const NAV_ITEMS = [
-    { id: "dashboard", label: "Dashboard", href: "index.html", icon: "⌂" },
-    { id: "medication", label: "Medicines", href: "medication.html", icon: "⚕" },
-    { id: "schedule", label: "Schedule", href: "schedule.html", icon: "⏰" },
-    { id: "history", label: "History", href: "history.html", icon: "☰" },
-    { id: "stock", label: "Stock", href: "stock.html", icon: "▤" },
-    { id: "cameras", label: "Cameras", href: "cameras.html", icon: "◉" },
-    { id: "smart-home", label: "Smart Home", href: "smart-home.html", icon: "⚙" },
-    { id: "notifications", label: "Notifications", href: "notifications.html", icon: "✉" },
-    { id: "settings", label: "Settings", href: "settings.html", icon: "⚙" },
+    { id: "dashboard", label: "Dashboard", href: "index.html", icon: "🏠", shortLabel: "Home" },
+    { id: "medication", label: "Medicines", href: "medication.html", icon: "💊", shortLabel: "Meds" },
+    { id: "schedule", label: "Schedule", href: "schedule.html", icon: "⏰", shortLabel: "Schedule" },
+    { id: "history", label: "History", href: "history.html", icon: "📋", shortLabel: "History" },
+    { id: "stock", label: "Stock", href: "stock.html", icon: "📦", shortLabel: "Stock" },
+    { id: "cameras", label: "Cameras", href: "cameras.html", icon: "📹", shortLabel: "Cameras" },
+    { id: "smart-home", label: "Smart Home", href: "smart-home.html", icon: "⚡", shortLabel: "Smart" },
+    { id: "notifications", label: "Notifications", href: "notifications.html", icon: "🔔", shortLabel: "Alerts" },
+    { id: "settings", label: "Settings", href: "settings.html", icon: "⚙️", shortLabel: "Settings" },
   ];
+
+  const BOTTOM_NAV_IDS = ["dashboard", "medication", "schedule", "notifications"];
 
   function renderSidebar(activeId) {
     const placeholder = document.getElementById("sidebar-placeholder");
     if (!placeholder) return;
-    const links = NAV_ITEMS.map(
+
+    // 1. Desktop Sidebar
+    const desktopLinks = NAV_ITEMS.map(
       (item) => `<a href="${item.href}" data-nav-id="${item.id}" class="${item.id === activeId ? "active" : ""}">
-        <span class="nav-icon">${item.icon}</span>${item.label}
-        ${item.id === "notifications" ? '<span class="unread-badge" id="unread-badge" style="display:none;"></span>' : ""}
+        <span class="nav-icon">${item.icon}</span>
+        <span>${item.label}</span>
+        ${item.id === "notifications" ? '<span class="unread-badge unread-badge-desktop" style="display:none;"></span>' : ""}
       </a>`
     ).join("");
+
+    // 2. Mobile Bottom Navigation Tabs
+    const bottomTabs = BOTTOM_NAV_IDS.map((id) => {
+      const item = NAV_ITEMS.find((n) => n.id === id);
+      if (!item) return "";
+      const isActive = item.id === activeId;
+      return `<a href="${item.href}" data-nav-id="${item.id}" class="mobile-nav-tab ${isActive ? "active" : ""}">
+        <span class="tab-icon">
+          ${item.icon}
+          ${item.id === "notifications" ? '<span class="tab-badge unread-badge-bottom" style="display:none;"></span>' : ""}
+        </span>
+        <span>${item.shortLabel}</span>
+      </a>`;
+    }).join("") + `
+      <button type="button" class="mobile-nav-tab" id="mobile-menu-tab-btn" aria-label="Open navigation menu">
+        <span class="tab-icon">☰</span>
+        <span>More</span>
+      </button>`;
+
+    // 3. Mobile Slide-out Drawer Navigation Links
+    const drawerLinks = NAV_ITEMS.map(
+      (item) => `<a href="${item.href}" data-nav-id="${item.id}" class="${item.id === activeId ? "active" : ""}">
+        <span class="nav-icon">${item.icon}</span>
+        <span>${item.label}</span>
+        ${item.id === "notifications" ? '<span class="unread-badge unread-badge-drawer" style="display:none;"></span>' : ""}
+      </a>`
+    ).join("");
+
     placeholder.outerHTML = `
-      <div class="sidebar">
-        <div class="brand">Elderly Care System</div>
-        <nav>${links}</nav>
-      </div>`;
+      <!-- Desktop Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-icon">✚</span>
+          <span>Elderly Care</span>
+        </div>
+        <nav>${desktopLinks}</nav>
+      </aside>
+
+      <!-- Mobile Top Navigation Header -->
+      <header class="mobile-topbar">
+        <div class="mobile-topbar-left">
+          <a href="index.html" class="mobile-topbar-brand">
+            <span class="brand-icon">✚</span>
+            <span>Elderly Care</span>
+          </a>
+        </div>
+        <div class="mobile-topbar-actions">
+          <a href="notifications.html" class="mobile-icon-btn" aria-label="Notifications">
+            <span>🔔</span>
+            <span class="unread-badge unread-badge-top" style="display:none;"></span>
+          </a>
+          <button type="button" class="mobile-icon-btn" id="mobile-drawer-toggle-btn" aria-label="Toggle menu">
+            <span>☰</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Mobile Slide-out Drawer -->
+      <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+      <div class="mobile-drawer" id="mobile-drawer">
+        <div class="mobile-drawer-header">
+          <div class="mobile-drawer-title">Navigation Menu</div>
+          <button type="button" class="mobile-drawer-close" id="mobile-drawer-close-btn" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-drawer-user" id="mobile-drawer-user-info">
+          <!-- Populated by attachSidebarFooter -->
+        </div>
+        <nav class="mobile-drawer-nav">
+          ${drawerLinks}
+        </nav>
+        <div class="mobile-drawer-footer">
+          <button id="mobile-logout-btn" class="btn-danger btn-block">Log Out</button>
+        </div>
+      </div>
+
+      <!-- Mobile Fixed Bottom Navigation Bar -->
+      <nav class="mobile-bottom-nav">
+        ${bottomTabs}
+      </nav>
+    `;
+
+    initMobileDrawer();
+  }
+
+  function initMobileDrawer() {
+    const drawer = document.getElementById("mobile-drawer");
+    const overlay = document.getElementById("mobile-drawer-overlay");
+    const toggleBtn = document.getElementById("mobile-drawer-toggle-btn");
+    const closeBtn = document.getElementById("mobile-drawer-close-btn");
+    const moreTabBtn = document.getElementById("mobile-menu-tab-btn");
+
+    function openDrawer() {
+      if (drawer && overlay) {
+        drawer.classList.add("open");
+        overlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    function closeDrawer() {
+      if (drawer && overlay) {
+        drawer.classList.remove("open");
+        overlay.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener("click", openDrawer);
+    if (moreTabBtn) moreTabBtn.addEventListener("click", openDrawer);
+    if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+    if (overlay) overlay.addEventListener("click", closeDrawer);
   }
 
   async function refreshUnreadBadge() {
-    const badge = document.getElementById("unread-badge");
-    if (!badge) return;
+    const badges = document.querySelectorAll(".unread-badge-desktop, .unread-badge-top, .unread-badge-bottom, .unread-badge-drawer");
+    if (badges.length === 0) return;
     try {
       const data = await Api.getNotifications(false);
       const count = data.notifications.length;
-      if (count > 0) {
-        badge.textContent = count > 99 ? "99+" : String(count);
-        badge.style.display = "inline-block";
-      } else {
-        badge.style.display = "none";
-      }
+      badges.forEach((b) => {
+        if (count > 0) {
+          b.textContent = count > 99 ? "99+" : String(count);
+          b.style.display = "inline-flex";
+        } else {
+          b.style.display = "none";
+        }
+      });
     } catch (err) {
       // Silent - the badge is a nice-to-have, not worth surfacing errors for.
     }
@@ -90,10 +204,6 @@ const CareCommon = (() => {
     DOCTOR: "Doctor",
   };
 
-  // Roles with no camera/smart-home access at all (not even read-only) -
-  // their nav links are removed entirely rather than just disabled.
-  // Cameras/smart-home are a Patient + Family Member thing; Caretaker and
-  // Doctor get neither.
   const NO_ACCESS_NAV = {
     DOCTOR: ["cameras", "smart-home"],
     CARETAKER: ["cameras", "smart-home"],
@@ -101,37 +211,56 @@ const CareCommon = (() => {
 
   function attachSidebarFooter(user) {
     const sidebar = document.querySelector(".sidebar");
-    if (!sidebar || sidebar.querySelector(".sidebar-footer")) return;
-    const footer = document.createElement("div");
-    footer.className = "sidebar-footer";
+    const mobileUserInfo = document.getElementById("mobile-drawer-user-info");
     const subtitle =
       user.role === "PATIENT"
         ? `Caregiver: ${escapeHtml(user.caregiver_email || "not set")}`
         : "Linked account";
-    footer.innerHTML = `
-      <div class="sidebar-user">
+
+    // 1. Desktop Footer
+    if (sidebar && !sidebar.querySelector(".sidebar-footer")) {
+      const footer = document.createElement("div");
+      footer.className = "sidebar-footer";
+      footer.innerHTML = `
+        <div class="sidebar-user">
+          <div class="sidebar-user-name">${escapeHtml(user.username)} <span class="role-badge">${escapeHtml(ROLE_LABELS[user.role] || user.role)}</span></div>
+          <div class="sidebar-user-caregiver">${subtitle}</div>
+        </div>
+        <button id="logout-btn" class="btn-sm btn-block">Log Out</button>`;
+      sidebar.appendChild(footer);
+
+      document.getElementById("logout-btn").addEventListener("click", handleLogout);
+    }
+
+    // 2. Mobile Drawer User Info
+    if (mobileUserInfo) {
+      mobileUserInfo.innerHTML = `
         <div class="sidebar-user-name">${escapeHtml(user.username)} <span class="role-badge">${escapeHtml(ROLE_LABELS[user.role] || user.role)}</span></div>
         <div class="sidebar-user-caregiver">${subtitle}</div>
-      </div>
-      <button id="logout-btn" class="btn-sm btn-block">Log Out</button>`;
-    sidebar.appendChild(footer);
-    document.getElementById("logout-btn").addEventListener("click", async () => {
-      try {
-        await Api.logout();
-      } catch (err) {
-        // ignore - we're logging out either way
+      `;
+      const mobileLogoutBtn = document.getElementById("mobile-logout-btn");
+      if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener("click", handleLogout);
       }
-      Api.clearSession();
-      location.href = "login.html";
-    });
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await Api.logout();
+    } catch (err) {
+      // ignore
+    }
+    Api.clearSession();
+    location.href = "login.html";
   }
 
   function applyRolePermissions(user) {
     document.body.dataset.role = user.role;
     const hiddenNavIds = NO_ACCESS_NAV[user.role] || [];
     hiddenNavIds.forEach((navId) => {
-      const link = document.querySelector(`.sidebar nav a[data-nav-id="${navId}"]`);
-      if (link) link.remove();
+      const links = document.querySelectorAll(`[data-nav-id="${navId}"]`);
+      links.forEach((l) => l.remove());
     });
   }
 
@@ -149,9 +278,14 @@ const CareCommon = (() => {
     const container = ensureToastContainer();
     const el = document.createElement("div");
     el.className = "toast" + (type ? " " + type : "");
-    el.textContent = message;
+    el.innerHTML = `<span>${type === "error" ? "⚠️" : type === "success" ? "✓" : "ℹ️"}</span> <span>${escapeHtml(message)}</span>`;
     container.appendChild(el);
-    setTimeout(() => el.remove(), 4500);
+    setTimeout(() => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(-10px)";
+      el.style.transition = "all 0.2s ease";
+      setTimeout(() => el.remove(), 200);
+    }, 4500);
   }
 
   function errorToast(err) {
@@ -250,12 +384,7 @@ const CareCommon = (() => {
 /* ---------------------------------------------------------------------
    Alarm Audio
    Plays frontend/assets/medication-alarm.mp3 via a single, reused
-   HTMLAudioElement - no external audio library. Browsers block unmuted
-   autoplay until the page has real user interaction with audio, so the
-   Dashboard's "Enable Medication Alarm" button exists specifically to
-   produce that first genuine play() call from a click. Once that has
-   happened, the same <audio> element keeps working for automatic
-   (no-click) playback for the rest of the browsing session.
+   HTMLAudioElement - no external audio library.
    ------------------------------------------------------------------- */
 
 const AlarmAudio = (() => {
@@ -298,9 +427,6 @@ const AlarmAudio = (() => {
     }
   }
 
-  // Called directly from a click handler (a genuine user gesture) so the
-  // browser's autoplay policy allows it - this is what "enables" the
-  // alarm for automatic playback later.
   async function enable() {
     const result = await play();
     if (result.ok) {
@@ -315,10 +441,6 @@ const AlarmAudio = (() => {
 
 /* ---------------------------------------------------------------------
    Medication Reminder Engine
-   Polls the backend (the source of truth) for today's records and pops a
-   prominent modal + independent audible alarm + browser notification the
-   moment a dose's scheduled time arrives, until the user confirms it as
-   taken, stops the alarm, or the grace period expires.
    ------------------------------------------------------------------- */
 
 const ReminderEngine = (() => {
@@ -339,20 +461,15 @@ const ReminderEngine = (() => {
   function buildModal(record) {
     const overlay = document.createElement("div");
     overlay.className = "modal-overlay";
-    // Deliberately no "dismiss" / "remind me later" control here: per spec
-    // the reminder must stay active until the user confirms it or the
-    // backend grace period expires (poll() below detects that and closes
-    // it) - not until the user just clicks it away. STOP ALARM only
-    // silences the audible alarm; it does not dismiss the reminder.
     overlay.innerHTML = `
       <div class="reminder-modal">
-        <div class="reminder-kicker">Medicine Time</div>
-        <h2>${record.medicine_name}</h2>
-        <div class="reminder-dose">Take ${CareCommon.formatNumber(record.dosage)}</div>
-        <div class="reminder-time">Scheduled: ${CareCommon.formatTime12(record.scheduled_time)}</div>
-        <div class="btn-row" style="justify-content:center;">
-          <button class="btn-success btn-large" id="reminder-taken-btn">MEDICINE TAKEN</button>
-          <button class="btn-danger btn-large" id="reminder-stop-alarm-btn">STOP ALARM</button>
+        <div class="reminder-kicker">🔔 Medicine Reminder</div>
+        <h2>${CareCommon.escapeHtml(record.medicine_name)}</h2>
+        <div class="reminder-dose">Take ${CareCommon.formatNumber(record.dosage)} dose</div>
+        <div class="reminder-time">Scheduled for ${CareCommon.formatTime12(record.scheduled_time)}</div>
+        <div class="btn-row">
+          <button class="btn-success btn-large" id="reminder-taken-btn">✓ MEDICINE TAKEN</button>
+          <button class="btn-danger btn-large" id="reminder-stop-alarm-btn">STOP ALARM SOUND</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
@@ -392,13 +509,10 @@ const ReminderEngine = (() => {
   }
 
   function openModal(record) {
-    if (modalEl) return; // one at a time
+    if (modalEl) return;
     activeRecord = record;
     modalEl = buildModal(record);
 
-    // Three independent triggers off the same scheduled time - the alarm
-    // sound never depends on (or is gated by) the Notification API, and
-    // vice versa. Either can fail on its own without affecting the other.
     AlarmAudio.play().then((result) => {
       if (!result.ok) {
         CareCommon.toast(
@@ -416,18 +530,10 @@ const ReminderEngine = (() => {
   async function poll() {
     try {
       const data = await Api.getToday();
-
-      // If the record currently shown got confirmed/expired elsewhere (e.g.
-      // the backend's own grace-period sweep, or another tab), close it -
-      // this is the "grace period expires" half of "active until confirmed
-      // or grace period expires."
       if (activeRecord) {
         const current = data.records.find((r) => r.id === activeRecord.id);
         if (!current || current.status !== "PENDING") {
           closeModal(current && current.status === "MISSED" ? "expired" : undefined);
-          // Status changed underneath us (grace period expired, or resolved
-          // from another tab) - let any open dashboard/history/stock view
-          // refresh instead of showing stale PENDING data.
           window.dispatchEvent(new CustomEvent("medication-updated"));
         }
       }
@@ -437,8 +543,7 @@ const ReminderEngine = (() => {
         openModal(due[0]);
       }
     } catch (err) {
-      // Silent: reminder polling should not spam errors if the server is
-      // briefly unavailable.
+      // Silent
     }
   }
 
@@ -453,10 +558,10 @@ const ReminderEngine = (() => {
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
-  if (document.body.dataset.public === "true") return; // login.html handles its own flow
+  if (document.body.dataset.public === "true") return;
 
   const user = await CareCommon.guardAuth();
-  if (!user) return; // guardAuth is already redirecting
+  if (!user) return;
 
   CareCommon.attachSidebarFooter(user);
   CareCommon.applyRolePermissions(user);
@@ -465,9 +570,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   CareCommon.refreshUnreadBadge();
   window.addEventListener("medication-updated", CareCommon.refreshUnreadBadge);
 
-  // Family Member / Doctor accounts are read-only, so a "confirm taken"
-  // reminder popup would just be a dead end for them - only the Patient
-  // (the only role that can actually confirm a dose) gets the reminder engine.
   const canConfirmDoses = user.role === "PATIENT";
   if (document.body.dataset.page !== "setup" && canConfirmDoses) {
     ReminderEngine.start();

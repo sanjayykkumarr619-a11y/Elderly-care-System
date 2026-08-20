@@ -26,11 +26,11 @@ function renderStock(stock) {
   body.innerHTML = stock
     .map(
       (m) => `<tr>
-        <td>${m.name}</td>
-        <td>${CareCommon.formatNumber(m.current_stock)}</td>
-        <td>${CareCommon.formatNumber(m.low_stock_threshold)}</td>
-        <td>${CareCommon.statusBadge(m.stock_status)}</td>
-        <td><button class="btn-sm btn-primary role-patient-only" onclick='openAddStock(${JSON.stringify({ id: m.id, name: m.name })})'>Add Stock</button></td>
+        <td data-label="Medicine"><strong style="font-size:16px;color:var(--color-primary-dark);">${CareCommon.escapeHtml(m.name)}</strong></td>
+        <td data-label="Current Stock"><strong style="${m.stock_status === 'LOW_STOCK' ? 'color:var(--color-danger);font-size:18px;' : 'font-size:18px;'}">${CareCommon.formatNumber(m.current_stock)}</strong></td>
+        <td data-label="Threshold">${CareCommon.formatNumber(m.low_stock_threshold)}</td>
+        <td data-label="Status">${CareCommon.statusBadge(m.stock_status)}</td>
+        <td data-label="Action"><button class="btn-sm btn-primary role-patient-only" onclick='openAddStock(${JSON.stringify({ id: m.id, name: m.name })})'>+ Add Stock</button></td>
       </tr>`
     )
     .join("");

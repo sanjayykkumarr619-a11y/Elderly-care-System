@@ -158,9 +158,9 @@ Four account roles, one shared patient record per household:
   invite code, and revoke a linked account's access (all in Settings).
 - **Family Member** - links to a Patient via invite code. Full control
   of cameras and smart-home devices (add/remove/connect/disconnect/
-  ON-off), same as the Patient. Read-only on medicine data - can see
-  medicines/schedule/stock/history but not mark a dose taken or edit
-  anything medical.
+  ON-off), same as the Patient. Can add/edit/delete medicines and
+  schedules, while stock adjustments and dose confirmation remain
+  Patient-only.
 - **Caretaker** - links to a Patient via invite code. The narrowest
   role: read-only access to the medicine log (medicines, schedule,
   history, stock) and the notification center - no marking doses taken,
@@ -176,7 +176,8 @@ Four account roles, one shared patient record per household:
 | Action | Patient | Family Member | Caretaker | Doctor |
 |---|---|---|---|---|
 | Mark taken/missed | Yes | No | No | No |
-| Add/edit/delete medicines, stock, schedule | Yes | No (view only) | No (view only) | No (view only) |
+| Add/edit/delete medicines and schedules | Yes | Yes | No (view only) | No (view only) |
+| Adjust stock / mark taken or missed | Yes | No | No | No |
 | View history/notifications | Yes | Yes | Yes | Yes |
 | Cameras / smart-home view | Yes | Yes | **No access** | **No access** |
 | Cameras / smart-home control | Yes | Yes | **No access** | **No access** |
